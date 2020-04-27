@@ -1,0 +1,35 @@
+extends layout
+
+block content
+    .container
+        .row.tlm-from
+            .col-md-2
+            .col-md-4
+                if registerWarning
+                    p.text-center.text-danger #{registerWarning}
+                form(action='/login', method='post')
+                    .input-group
+                        .input-group-prepend
+                            span.input-group-text
+                                i.fa.fa-envelope
+                        input.form-control(type='email', name="email", aria-describedby="emailHelp", placeholder="请输入邮箱")
+                    .input-group
+                        .input-group-prepend
+                            span.input-group-text
+                                i.fa.fa-lock
+                        input.form-control(type='password', name="password", placeholder="请输入密码")
+                    .d-inline-flex
+                        .input-group
+                            .input-group-prepend
+                                span.input-group-text
+                                    i.fa.fa-keyboard
+                            input.form-control(type='text', name="captcha", placeholder="不分大小写",
+                                title = "验证码不正确", pattern="[a-zA-Z0-9]{4}")
+                        div !{captcha}
+                    .form-check
+                        label.form-check-label.tlm-check
+                            input.form-check-input(type="checkbox", name="remember")/ 保持登陆状态
+                    .input-group.tlm-forget-password
+                        button.btn.btn-primary.btn-block(type='submit') 登陆
+                        a(href="") 忘记密码？
+            .col-md-6

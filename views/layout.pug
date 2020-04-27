@@ -1,0 +1,62 @@
+doctype html
+html
+    head
+        // 必须的 meta
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+
+        // Bootstrap CSS
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel='stylesheet', href='https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css')
+        link(rel='stylesheet', href='https://cdn.staticfile.org/font-awesome/5.13.0/css/all.min.css')
+        link(rel='stylesheet', href='https://cdn.staticfile.org/prism/1.20.0/themes/prism-okaidia.min.css')
+
+        // 标题
+        title Touhou Little Maid
+    body
+        nav.navbar.navbar-expand-md.navbar-dark.bg-dark.sticky-top
+            a.navbar-brand(href="#") Touhou Little Maid
+            button.navbar-toggler(type='button', data-toggle='collapse', data-target="#tlmNav")
+                span.navbar-toggler-icon
+            .collapse.navbar-collapse#tlmNav
+                ul.navbar-nav
+                    li.nav-item
+                        a.nav-link(href='/') 主页
+                    li.nav-item
+                        a.nav-link(href='#') 资源库
+                    li.nav-item
+                        a.nav-link(href='https://tlmwiki.cfpa.team') 文档
+                ul.navbar-nav.ml-auto
+                    li.nav-item.dropdown
+                        a.nav-link.dropdown-toggle#langdrop(href="#" data-toggle="dropdown")
+                            i.fa.fa-language
+                        .dropdown-menu
+                            a.dropdown-item(href="#") 中文
+                            a.dropdown-item(href="#") English
+                            a.dropdown-item(href="#") 日本語
+                    if !login
+                        li.nav-item
+                            a.nav-link(href='/login')
+                                i.fa.fa-user &nbsp;登陆
+                        li.nav-item
+                            a.nav-link(href='/register')
+                                i.fa.fa-registered &nbsp;注册
+                    else
+                        li.nav-item
+                            a.nav-link(href='#') #{username}
+                        li.nav-item
+                            a.nav-link(href='/logout') 退出账号
+        block content
+        footer.footer.fixed-bottom
+            .container
+                .row
+                    .col-lg-1
+                    .col-lg-7
+                        p.text-center.tlm-footer
+                            i.fa.fa-book &nbsp;我们可以这样怀疑，即使最聪明的人，活了一世，他又能懂得多少生活的绝对价值呢
+                    .col-lg-1
+                    .col-lg-3
+        // Bootstrap JS
+        script(src='https://cdn.staticfile.org/jquery/3.5.0/jquery.min.js')
+        script(src='https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js')
+        script(src='https://cdn.staticfile.org/prism/1.20.0/prism.min.js')

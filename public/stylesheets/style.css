@@ -1,0 +1,45 @@
+.tlm-title {
+    margin-top: 5rem;
+}
+
+.tlm-subtitle {
+    color: #848484;
+}
+
+.tlm-columns {
+    margin: 6rem;
+}
+
+.tlm-columns p {
+    margin-top: 1rem;
+    color: #5c5c5c;
+    font-size: 13px;
+}
+
+.tlm-footer {
+    font-size: 11px;
+    color: #5c5c5c;
+}
+
+footer {
+    padding-top: 1rem;
+    background-color: #ececec;
+}
+
+.tlm-from {
+    margin-top: 5rem;
+}
+
+.tlm-from .input-group {
+    margin-top: 12px;
+}
+
+.tlm-check {
+    margin-top: 12px;
+    margin-left: 2px;
+}
+
+.tlm-forget-password a {
+    margin: 1px;
+    font-size: small;
+}
