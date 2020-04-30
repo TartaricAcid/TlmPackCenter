@@ -1,0 +1,44 @@
+extends layout
+
+block content
+    .container.tlm-title
+        .row.tlm-author
+            .col-lg-8
+                .card
+                    .card-header
+                        h4.card-title
+                            strong #{username}&nbsp;
+                            small
+                                span.badge.badge-primary
+                                    i.fa.fa-user &nbsp;LV#{level}
+                                | &nbsp;
+                                span.badge.badge-info
+                                    i.fa.fa-calendar &nbsp;#{date}
+                        p.card-text.text-muted
+                            i.fa.fa-quote-left.fa-3x.fa-pull-left.fa-border
+                            | #{signature}
+            .col-lg-4
+        .row.tlm-pack-list
+            .col-lg-8
+                if project
+                    each entry in project
+                        a.card(href=`../project/${entry.id}`)
+                            .card-body
+                                h5.card-title
+                                    strong #{entry.data.title}&nbsp;
+                                    small
+                                        span.badge.badge-danger
+                                            i.fa.fa-copyright &nbsp;#{entry.data.license}
+                                p.card-text.text-muted
+                                    small
+                                        i.fa.fa-clock &nbsp;#{entry.data.date}&nbsp;&nbsp;
+                                        i.fa.fa-download &nbsp;1,543&nbsp;&nbsp;
+                                        i.fa.fa-star &nbsp;345&nbsp;
+                                        br
+                                        | #{entry.data.desc}
+                else
+                    p.text-secondary <br> Emmmmmmmmmmmmm……我什么作品也没有
+            .col-lg-4
+        .row.tlm-footer-white
+            p &nbsp;
+

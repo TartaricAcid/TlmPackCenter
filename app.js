@@ -11,6 +11,9 @@ const indexRouter = require('./routes/index');
 const registerRouter = require('./routes/user/register')
 const loginRouter = require('./routes/user/login')
 const logoutRouter = require('./routes/user/logout')
+const userRouter = require('./routes/user/user')
+const newpackRouter = require('./routes/project/newpack')
+const projectRouter = require('./routes/project/project')
 
 const app = express();
 
@@ -34,7 +37,8 @@ app.use(session({
 }))
 
 // 路由中间件装填
-app.use('/', [indexRouter, registerRouter, loginRouter, logoutRouter]);
+app.use('/', [indexRouter, registerRouter, loginRouter, logoutRouter,
+    userRouter, newpackRouter, projectRouter]);
 
 // 上面所有的路由都找不到，抛出一个 404
 app.use(function (req, res, next) {

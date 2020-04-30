@@ -6,36 +6,37 @@ block content
             .col-md-2
             .col-md-4
                 if registerWarning
-                    p.text-center.text-danger #{registerWarning}
+                    .alert.alert-danger.alert-dismissible
+                        strong #{registerWarning}
                 form(action='/register', method='post')
                     .input-group
                         .input-group-prepend
                             span.input-group-text
-                                i.fa.fa-envelope
+                                i.fa.fa-envelope.fa-fw
                         input.form-control(type='email', name="email", aria-describedby="emailHelp", placeholder="请输入邮箱")
                     .input-group
                         .input-group-prepend
                             span.input-group-text
-                                i.fa.fa-user
+                                i.fa.fa-user.fa-fw
                         input.form-control(type='text', name="username", placeholder="请输入用户名",
                             title = "用户名至少为三个非空白字符", pattern="[\\S]{3,}")
                     .input-group
                         .input-group-prepend
                             span.input-group-text
-                                i.fa.fa-lock
+                                i.fa.fa-lock.fa-fw
                         input.form-control(type='password', name="password1", placeholder="请输入密码",
                             title = "密码至少为六个非空白字符", pattern="[\\S]{6,}")
                     .input-group
                         .input-group-prepend
                             span.input-group-text
-                                i.fa.fa-lock
+                                i.fa.fa-lock.fa-fw
                         input.form-control(type='password', name="password2", placeholder="请再次输入密码",
                             title = "密码至少为六个非空白字符", pattern="[\\S]{6,}")
                     .d-inline-flex
                         .input-group
                             .input-group-prepend
                                 span.input-group-text
-                                    i.fa.fa-keyboard
+                                    i.fa.fa-keyboard.fa-fw
                             input.form-control(type='text', name="captcha", placeholder="不分大小写",
                                 title = "验证码不正确", pattern="[a-zA-Z0-9]{4}")
                         div !{captcha}

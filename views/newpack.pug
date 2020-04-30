@@ -1,0 +1,27 @@
+extends layout
+
+block content
+    .container
+        .row.tlm-from
+            .col-md-2
+            .col-md-4
+                if warning
+                    .alert.alert-danger.alert-dismissible
+                        strong #{warning}
+                form(action='/newpack', method='post')
+                    .input-group
+                        .input-group-prepend
+                            span.input-group-text
+                                i.fa.fa-bars.fa-fw
+                        input.form-control(type='text', name="title", placeholder="输入项目名称",
+                            title = "项目必须为英文字符和下划线", pattern="[\\w ]{6,}")
+                    .input-group
+                        textarea.form-control#desc(rows="5", name="desc", placeholder="请输入简介文本")
+                    .input-group
+                        .input-group-prepend
+                            span.input-group-text
+                                i.fa.fa-copyright.fa-fw
+                        input.form-control(type='text', name="license", placeholder="项目协议说明")
+                    .input-group.tlm-forget-password
+                        button.btn.btn-primary.btn-block(type='submit') 创建
+            .col-md-6

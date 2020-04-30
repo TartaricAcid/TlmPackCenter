@@ -43,3 +43,33 @@ footer {
     margin: 1px;
     font-size: small;
 }
+
+.tlm-author {
+    margin-bottom: 10px;
+}
+
+.tlm-pack-list .card {
+    margin-top: 5px;
+}
+
+
+.tlm-pack-list .card:hover {
+    background-color: #dadada;
+    transition-duration: 0.3s;
+}
+
+.tlm-footer-white {
+    margin-bottom: 48px;
+}
+
+.tlm-project-table {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.tlm-project-table tbody th {
+    font-weight: normal;
+    padding: 8px;
+}
+

@@ -1,0 +1,73 @@
+extends layout
+
+block content
+    .container.tlm-title
+        .row.tlm-author
+            .col-lg-8
+                .card
+                    .card-header
+                        h4.card-title
+                            strong #{project.title}&nbsp;
+                            small
+                                span.badge.badge-primary
+                                    i.fa.fa-copyright &nbsp;#{project.license}
+                                | &nbsp;
+                                span.badge.badge-info
+                                    i.fa.fa-calendar &nbsp;#{project.date}
+                        p.card-text.text-muted
+                            i.fa.fa-quote-left.fa-3x.fa-pull-left.fa-border
+                            | #{project.desc}
+            .col-lg-4
+                .card
+                    .card-header
+                        p.card-text.text-muted
+                            strong #{project.author.username}&nbsp;
+                            small
+                                span.badge.badge-primary &nbsp;LV #{project.author.level}
+                                | &nbsp;
+                                span.badge.badge-info
+                                    i.fa.fa-calendar &nbsp;#{project.author.register_date}
+                            | <br> #{project.author.signature}
+        .row.tlm-pack-list
+            .col-lg-8
+                if is_author
+                    button.btn.btn-success.btn-sm(type='button', data-toggle="modal", data-target="#uploadFile")
+                        i.fa.fa-upload &nbsp;上传文件
+                    .modal.fade#uploadFile
+                        .modal-dialog
+                            form.modal-content(action=upload_url, method='post', enctype="multipart/form-data")
+                                .modal-header
+                                    h4.modal-title 请选择文件
+                                    button.close(type="button", data-dismiss="modal") &times;
+                                .modal-body
+                                    .input-group
+                                        .input-group-prepend
+                                            span.input-group-text
+                                                i.fa.fa-envelope.fa-file
+                                        input.form-control(type='file', name="file")
+                                .modal-footer
+                                    .input-group.tlm-forget-password
+                                        button.btn.btn-primary.btn-block(type='submit') 确认
+                table.table.table-bordered.table-hover.tlm-project-table
+                    thead
+                        tr
+                            th 序号
+                            th 上传日期
+                            th 大小
+                            th 下载量
+                            th 下载
+                    tbody
+                        if entries
+                            each entry, index in entries
+                                tr
+                                    th #{index}
+                                    th #{entry.upload_date}
+                                    th #{entry.file_size}
+                                    th #{entry.file_download}
+                                    th
+                                        a(href=entry.file_path)
+                                            i.fa.fa-download
+            .col-lg-4
+        .row.tlm-footer-white
+            p &nbsp;
+

@@ -1,7 +1,7 @@
 const express = require('express');
 const svgCaptcha = require('svg-captcha');
 const bcrypt = require('bcryptjs')
-const mongoClient = require('mongodb').MongoClient("mongodb://localhost:27017", {useUnifiedTopology: true});
+const newMongodbClient = require('../util/mongofactory')
 
 const router = express.Router();
 
@@ -81,41 +81,48 @@ router.post('/register', function (req, res, next) {
         return;
     }
 
-    // 数据存储
-    mongoClient.connect().then(client => {
-        let db = client.db(dbName);
-        let collection = db.collection('user');
+    (async () => {
+        // 数据存储
+        let mongoClient = newMongodbClient();
+        let client = await mongoClient.connect();
+        let collection = client.db(dbName).collection('user');
+        let docs = await collection.find({email: email}).toArray();
 
-        collection.find({email: email}).toArray(function (err, docs) {
-            // 检查是否该邮箱已经注册了？
-            if (docs.length > 0) {
-                let captcha = svgCaptcha.create();
-                req.session.captcha = captcha.text;
-                res.render('register', {captcha: captcha.data, registerWarning: "该邮箱已经注册过了！"})
-                return;
-            }
+        // 检查是否该邮箱已经注册了？
+        if (docs.length > 0) {
+            let captcha = svgCaptcha.create();
+            req.session.captcha = captcha.text;
+            res.render('register', {captcha: captcha.data, registerWarning: "该邮箱已经注册过了！"})
+            return;
+        }
 
-            let hash = bcrypt.hashSync(password1, bcrypt.genSaltSync(10));
-            let userData = {
-                email: email,
-                username: username,
-                password: hash
-            }
+        let hash = bcrypt.hashSync(password1, bcrypt.genSaltSync(10));
+        let userData = {
+            email: email,
+            username: username,
+            password: hash,
+            register_date: new Date(),
+            level: 0,
+            signature: "",
+            projects: []
+        }
 
-            collection.insertOne(userData)
-                .then(r => {
-                    return client.close();
-                }).then(r => {
-                if (req.body.remember) {
-                    // 保存三十天
-                    req.session.cookie.originalMaxAge = 30 * 24 * 3600 * 1000;
-                }
-                req.session.login = true;
-                req.session.username = username;
-                res.redirect("/");
-            })
-        });
-    });
+        await collection.insertOne(userData);
+        await mongoClient.close()
+
+        if (req.body.remember) {
+            // 保存三十天
+            req.session.cookie.originalMaxAge = 30 * 24 * 3600 * 1000;
+        }
+        req.session.login = true;
+        req.session.email = userData.email;
+        req.session.username = userData.username;
+        req.session.register_date = userData.register_date;
+        req.session.level = userData.level;
+        req.session.signature = userData.signature;
+        req.session.projects = userData.projects;
+        res.redirect("/");
+    })()
 });
 
 module.exports = router;

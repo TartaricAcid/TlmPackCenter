@@ -1,7 +1,7 @@
 const express = require('express');
 const svgCaptcha = require('svg-captcha');
 const bcrypt = require('bcryptjs')
-const mongoClient = require('mongodb').MongoClient("mongodb://localhost:27017", {useUnifiedTopology: true});
+const newMongodbClient = require('../util/mongofactory')
 
 const router = express.Router();
 
@@ -41,36 +41,43 @@ router.post('/login', function (req, res, next) {
         return;
     }
 
-    // 从数据库中提取密码用户名
-    // 数据存储
-    mongoClient.connect().then(client => {
-        let db = client.db(dbName);
-        let collection = db.collection('user');
+    (async () => {
+        let mongoClient = newMongodbClient();
+        let client = await mongoClient.connect();
+        let collection = client.db(dbName).collection('user');
+        let result = await collection.findOne({email: email});
+        if (!result || !result.password) {
+            let captcha = svgCaptcha.create();
+            req.session.captcha = captcha.text;
+            res.render('login', {captcha: captcha.data, registerWarning: "该用户不存在！"})
+            await mongoClient.close()
+            return;
+        }
 
-        collection.findOne({email: email}, function (err, result) {
-            if (!result || !result.password) {
-                let captcha = svgCaptcha.create();
-                req.session.captcha = captcha.text;
-                res.render('login', {captcha: captcha.data, registerWarning: "该用户不存在！"})
-                return;
-            }
+        if (!bcrypt.compareSync(password, result.password)) {
+            let captcha = svgCaptcha.create();
+            req.session.captcha = captcha.text;
+            res.render('login', {captcha: captcha.data, registerWarning: "密码错误！"})
+            await mongoClient.close()
+            return;
+        }
 
-            if (!bcrypt.compareSync(password, result.password)) {
-                let captcha = svgCaptcha.create();
-                req.session.captcha = captcha.text;
-                res.render('login', {captcha: captcha.data, registerWarning: "密码错误！"})
-                return;
-            }
+        if (req.body.remember) {
+            // 保存三十天
+            req.session.cookie.originalMaxAge = 30 * 24 * 3600 * 1000;
+        }
 
-            if (req.body.remember) {
-                // 保存三十天
-                req.session.cookie.originalMaxAge = 30 * 24 * 3600 * 1000;
-            }
-            req.session.login = true;
-            req.session.username = result.username;
-            res.redirect("/");
-        })
-    })
+        req.session.login = true;
+        req.session.email = result.email;
+        req.session.username = result.username;
+        req.session.register_date = result.register_date;
+        req.session.level = result.level;
+        req.session.signature = result.signature;
+        req.session.projects = result.projects;
+        res.redirect("/");
+
+        await mongoClient.close();
+    })()
 })
 
 module.exports = router;

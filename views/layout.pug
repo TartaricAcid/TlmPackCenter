@@ -42,8 +42,12 @@ html
                             a.nav-link(href='/register')
                                 i.fa.fa-registered &nbsp;注册
                     else
-                        li.nav-item
-                            a.nav-link(href='#') #{username}
+                        li.nav-item.dropdown
+                            a.nav-link.dropdown-toggle#langdrop(href="#" data-toggle="dropdown") #{username}
+                            .dropdown-menu
+                                a.dropdown-item(href="/user") 个人主页
+                                a.dropdown-item(href="/newpack") 创新新项目
+                                a.dropdown-item(href="#") 个人信息修改
                         li.nav-item
                             a.nav-link(href='/logout') 退出账号
         block content
