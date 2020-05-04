@@ -3,11 +3,23 @@ const dateFormat = require('../util/date')
 const fileSizeFormat = require('../util/filesize')
 const multer = require('multer')
 const md5 = require('../util/md5')
+const fs = require('fs')
 
 const dbName = 'data';
 const newMongodbClient = require('../util/mongofactory')
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        fs.mkdir(`./temp/${req.params.id}`, function (err) {
+            cb(null, `./temp/${req.params.id}`)
+        })
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}-${file.originalname}`)
+    }
+})
 const upload = multer({
-    dest: './temp', fileFilter: function (req, file, cb) {
+    storage: storage,
+    fileFilter: function (req, file, cb) {
         if (file.mimetype === 'application/zip') {
             cb(null, true)
         } else {
@@ -41,7 +53,7 @@ router.get('/project/:id', function (req, res, next) {
                 username: req.session.username,
                 project: docs.data,
                 entries: docs.file.reverse(),
-                upload_url: `${req.originalUrl}/upload`,
+                upload_url: `${req.originalUrl}`,
                 setting_url: `${req.originalUrl}/setting`,
                 delete_url: `${req.originalUrl}/delete`,
             });
@@ -50,7 +62,7 @@ router.get('/project/:id', function (req, res, next) {
     })();
 });
 
-router.post('/project/:id/upload', upload.single('file'), function (req, res, next) {
+router.post('/project/:id', upload.single('file'), function (req, res, next) {
     let id = req.params.id;
     (async function () {
         let mongoClient = newMongodbClient();
@@ -78,7 +90,7 @@ router.post('/project/:id/upload', upload.single('file'), function (req, res, ne
                         username: req.session.username,
                         project: docs.data,
                         entries: docs.file.reverse(),
-                        upload_url: `${req.originalUrl}/upload`,
+                        upload_url: `${req.originalUrl}`,
                         setting_url: `${req.originalUrl}/setting`,
                         delete_url: `${req.originalUrl}/delete`,
                         warning: "检测到该文件已经存在，请勿重复上传"
