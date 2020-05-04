@@ -74,7 +74,7 @@ router.post('/login', function (req, res, next) {
         req.session.level = result.level;
         req.session.signature = result.signature;
         req.session.projects = result.projects;
-        res.redirect("/");
+        res.redirect("/user");
 
         await mongoClient.close();
     })()

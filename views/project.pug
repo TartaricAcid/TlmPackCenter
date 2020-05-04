@@ -30,44 +30,107 @@ block content
                             | <br> #{project.author.signature}
         .row.tlm-pack-list
             .col-lg-8
+                if warning
+                    .alert.alert-danger.alert-dismissible
+                        strong #{warning}
                 if is_author
                     button.btn.btn-success.btn-sm(type='button', data-toggle="modal", data-target="#uploadFile")
                         i.fa.fa-upload &nbsp;上传文件
-                    .modal.fade#uploadFile
-                        .modal-dialog
-                            form.modal-content(action=upload_url, method='post', enctype="multipart/form-data")
-                                .modal-header
-                                    h4.modal-title 请选择文件
-                                    button.close(type="button", data-dismiss="modal") &times;
-                                .modal-body
-                                    .input-group
-                                        .input-group-prepend
-                                            span.input-group-text
-                                                i.fa.fa-envelope.fa-file
-                                        input.form-control(type='file', name="file")
-                                .modal-footer
-                                    .input-group.tlm-forget-password
-                                        button.btn.btn-primary.btn-block(type='submit') 确认
+                    | &nbsp;
+                    button.btn.btn-primary.btn-sm(type='button', data-toggle="modal", data-target="#settingProject")
+                        i.fa.fa-cog &nbsp;修改项目信息
+                    | &nbsp;
+                    button.btn.btn-danger.btn-sm(type='button', data-toggle="modal", data-target="#deleteProject")
+                        i.fa.fa-trash &nbsp;删除项目
                 table.table.table-bordered.table-hover.tlm-project-table
                     thead
                         tr
                             th 序号
                             th 上传日期
                             th 大小
-                            th 下载量
-                            th 下载
+                            // th 下载量
+                            // th 下载
+                            if is_author
+                                th 删除
                     tbody
                         if entries
                             each entry, index in entries
                                 tr
-                                    th #{index}
+                                    th #{index + 1}
                                     th #{entry.upload_date}
                                     th #{entry.file_size}
-                                    th #{entry.file_download}
-                                    th
-                                        a(href=entry.file_path)
+                                    // th #{entry.file_download}
+                                    // th
+                                        a.btn.btn-success.btn-sm(href=entry.file_path)
                                             i.fa.fa-download
+                                    if is_author
+                                        th
+                                            - let id = `#deleteFile${index}`
+                                                button.btn.btn-danger.btn-sm(type='button', data-toggle="modal", data-target=id)
+                                                    i.fa.fa-trash
+
             .col-lg-4
         .row.tlm-footer-white
             p &nbsp;
+    .modal.fade#uploadFile
+        .modal-dialog
+            form.modal-content(action=upload_url, method='post', enctype="multipart/form-data")
+                .modal-header
+                    h4.modal-title 请选择文件
+                    button.close(type="button", data-dismiss="modal") &times;
+                .modal-body
+                    .input-group
+                        .input-group-prepend
+                            span.input-group-text
+                                i.fa.fa-envelope.fa-file
+                        input.form-control(type='file', name="file")
+                .modal-footer
+                    .input-group.tlm-forget-password
+                        button.btn.btn-primary.btn-block(type='submit') 确认
+    .modal.fade#settingProject
+        .modal-dialog
+            form.tlm-from.modal-content(action=setting_url, method='post')
+                .modal-header
+                    h4.modal-title 修改项目信息
+                    button.close(type="button", data-dismiss="modal") &times;
+                .modal-body
+                    .input-group
+                        .input-group-prepend
+                            span.input-group-text
+                                i.fa.fa-bars.fa-fw
+                        input.form-control(type='text', name="title", placeholder="输入项目名称",
+                            title = "项目必须为英文字符和下划线", pattern="[\\w ]{6,}", value=project.title)
+                    .input-group
+                        textarea.form-control#desc(rows="5", name="desc", placeholder="请输入简介文本")
+                    .input-group
+                        .input-group-prepend
+                            span.input-group-text
+                                i.fa.fa-copyright.fa-fw
+                        input.form-control(type='text', name="license", placeholder="项目协议说明",
+                            value=project.license)
+                .modal-footer
+                    .input-group.tlm-forget-password
+                        button.btn.btn-primary.btn-block(type='submit') 确认
+    .modal.fade#deleteProject
+        .modal-dialog
+            form.modal-content(action=delete_url, method='post')
+                .modal-header
+                    h4.modal-title 你确定要删除此项目么？
+                    button.close(type="button", data-dismiss="modal") &times;
+                .modal-footer
+                    .input-group.tlm-forget-password
+                        button.btn.btn-primary.btn-block(type='submit') 确认
+    if entries
+        each entry, index in entries
+            - let id = `deleteFile${index}`
+            - let url = `${delete_url}/${index}`
+                .modal.fade(id=id)
+                    .modal-dialog
+                        form.modal-content(action=url, method='post')
+                            .modal-header
+                                h4.modal-title 你确定要删除此文件么？
+                                button.close(type="button", data-dismiss="modal") &times;
+                            .modal-footer
+                                .input-group.tlm-forget-password
+                                    button.btn.btn-primary.btn-block(type='submit') 确认
 

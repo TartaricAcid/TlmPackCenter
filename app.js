@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public'))); // 静态网页文件�
 
 app.use(session({
     cookie: {maxAge: 3600 * 1000}, // 默认会话保存一个小时
-    secret: uuid.v4(),             // 加密 cookies 的字符串
+    secret: "this is a test",      // 加密 cookies 的字符串
     // 存储进 redis 数据库中
     store: new redisStore({client: redis.createClient()}),
     resave: false,

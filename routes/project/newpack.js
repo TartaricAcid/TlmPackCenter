@@ -68,6 +68,7 @@ router.post('/newpack', function (req, res, next) {
             await projectCol.insertOne({
                 id: projectId,
                 data: projectData,
+                file: [],
                 email: req.session.email
             })
 
